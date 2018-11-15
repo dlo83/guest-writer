@@ -193,9 +193,14 @@ _If you already have an Auth0 application set up, feel free to skip ahead and me
 * Choose the **Single Page Web App** application type.
 * Click the **Settings** tab. You should now see fields with your Client ID and Client Secret.  Paste these values into the appropriate fields in your `cypress.env.json` file.
 
+
 ### Application Configuration
 
 In order to get our Cypress authentication working with Auth0, there's a few more things we have to do.
+
+* Scroll down to the **Allowed Callback URLs** section and enter in the following: `http://localhost:3000/callback`.  After user authentication occurs, Auth0 will only redirect successfully if the route in question is listed here.
+* Enter `http://localhost:3000` into the **Allowed Web Origin** field.
+* Enter `http://localhost:3000` into the **Allowed Logout URLs** field.
 
 * Scroll down to the bottom of the **Settings** page, and click **Show Advanced Settings**.
 * Click on the **Grant Types** tab, and check the **Password** grant.
@@ -203,7 +208,7 @@ In order to get our Cypress authentication working with Auth0, there's a few mor
 
 #### Grant Strategies
 
-
+In the last section, we enabled the Password grant.
 
 
 
