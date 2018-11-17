@@ -163,9 +163,9 @@ Now back in our `cypress.env.json` file, let's paste in the following:
 
 Great &mdash; now we're telling our custom login command to use the values defined in this file.  These values provided are simply placeholders, though; we need to track down the following bits of information in Auth0:
 
-* Tenant my-rad-tenant
-* Username danlourenco@icloud.com
-* Password usual auth0
+* Tenant 
+* Username 
+* Password 
 * Audience
 * Client ID
 * Client Secret
@@ -173,8 +173,6 @@ Great &mdash; now we're telling our custom login command to use the values defin
 Let's head on over to Auth0 to grab these values, and tie up a few loose ends.
 
 ## Auth0 Setup & Configuration
-
-You should have a basic Auth0
 
 ### Auth0 Credentials
 
@@ -184,7 +182,7 @@ Verify your account via the Auth0 email account you will receive, and you're rea
 
 Three credentials down, three to go. 
 
-### Create Auth0 Application
+### Creating an Auth0 Application
 
 _If you already have an Auth0 application set up, feel free to skip ahead and meet us in the next section._
 
@@ -202,36 +200,85 @@ In order to get our Cypress authentication working with Auth0, there's a few mor
 * Enter `http://localhost:3000` into the **Allowed Web Origin** field.
 * Enter `http://localhost:3000` into the **Allowed Logout URLs** field.
 
+
 * Scroll down to the bottom of the **Settings** page, and click **Show Advanced Settings**.
 * Click on the **Grant Types** tab, and check the **Password** grant.
 * Click **Save Changes**.
 
-#### Grant Strategies
+### Grant Strategies
 
-In the last section, we enabled the Password grant.
+In the last section, we enabled the Password grant. But what exactly is a grant, anyway?
 
+[Auth0](https://auth0.com/docs/applications/application-grant-types) defines a grant as follows:
 
+> OAuth 2.0 supports several types of grants, which are methods method by which you can gain Access Tokens. Different grant types allow different types of access, and based on the needs of your app, some grant types are more appropriate than others.
 
-- Discuss the Resource Owner Password Grant Strategy
+That last sentence is the key here. Normally, when authenticating with Auth0, we're redirected to log in through Auth0's hosted login page.  *But*, since we're in a testing environment, and again, we don't want to test what we don't control, we have to find some other way to authenticate against Auth0 without redirecting away from our application.  That's where the Password Grant comes in.
 
-- Note that the ` /oauth/ro ` endpoint is deprecated, and using it for authentication in this scenario is an anti-pattern
+The Password grant relies on authenticating a user via provided username and password credentials.
 
-- Checklist for configuration
-  - Grant Type Set Properly
-  - Default Audience/Directory set appropriately
-  - Tenant Configuration
+### Grant Strategy Configuration
+
+There are three important settings to be configured for our Password Grant Strategy:
+
+1. Set Application Grant type 
+2. Register an API with Auth0
+3. Configure your tenant's Default Audience and Default Directory
+
+We've already taken care of the first item when configuring our application settings. Let's address the rest.
+
+- Click on the **APIs** menu on the sidebar.  You should see that the **Auth0 Management API** was automatically created for you.  *For the purposes of this demo, we'll be using this API, but please use another in your own projects if it makes sense to do so.*
+- Copy the value from the API Audience field to your clipboard.  Enter this as the value for the corresponding `auth_audience` key in your `cypress.env.json` file. 
+- Back in the Auth0 Management portal, browse over to your **Tenant Settings > General** tab, and enter this same value in the Default **Audience** field.
+- In the **Default Directory** field below, enter `Username-Password-Authentication`.
+- Hit **Save**.
+
+Phew! We're finished with our Grant Strategy configuration within Auth0. Now let's head back to our `cypress.env.json` file and update our `auth_url` property with a value of `https://YOUR_AUTH0_DOMAIN/oauth/token`, where `YOUR_AUTH_DOMAIN` is, well, your Auth0 tenant domain. 
+
+*If you need a hint, look at the `auth_audience` property for the domain if you don't have it memorized by now.* 
 
 ## Writing tests using Cypress Login Command
 
-- Demonstrate how we use the command we created to programatically log into Auth0 and test UI behind authentication
+OK.  We've created our Cypress Custom Command for login.  We've configured Auth0 and set up a Password Grant.  We've updated our Cypress environmental variables so that we're not committing sensitive information into version control.  Let's see how we can now take advantage of everything we've done and log into Auth0 programmatically using Cypress!
+
+In your project, create a file called `login.js` in your `cypress/integration` directory.
+
+Paste in the following:
+
+```
+describe('login', () => {
+  it('should successfully log into our app', () => {
+    cy.login()
+      .then((resp) => {
+        return resp.body;
+      })
+      .then((body) => {
+        const {access_token, expires_in, id_token} = body;
+        const auth0State = {
+          nonce: '',
+          state: 'some-random-state'
+        };
+        const callbackUrl = `/callback#access_token=${access_token}&scope=openid&id_token=${id_token}&expires_in=${expires_in}&token_type=Bearer&state=${auth0State.state}`;
+        cy.visit(callbackUrl, {
+          onBeforeLoad(win) {
+            win.document.cookie = 'com.auth0.auth.some-random-state=' + JSON.stringify(auth0State);
+          }
+        });
+      })
+  });
+});
+```
+
+Now in your terminal, run `npm run cypress:open` and click `login.js` in the Cypress test runner.  You should now an instance of Chrome launched, with your user automatically logged in to Auth0!  Click on the **Profile** page to see your logged in user's email address for verification.
 
 ## Wrap Up
 
 - Recap of what we've learned.
 
 ## Keep Reading
-
-- Resources to helpful Cypress + Auth0 Docs.
+- [Auth0 Authentication API](https://auth0.com/docs/api/authentication#resource-owner-password)
+- [Call APIs from Highly Trusted Applications](https://auth0.com/docs/api-auth/grant/password)
+- [How to implement the Resource Owner Password Grant](https://auth0.com/docs/api-auth/tutorials/password-grant#realm-support)
 
 
 
