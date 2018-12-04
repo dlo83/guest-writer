@@ -16,9 +16,9 @@ related:
 
 ## Prerequisites
 
-We’ll be referencing a React application written with modern JavaScript language features (ES2015+), so a good understanding of modern web technologies is strongly recommended.  If you’re not quite there yet, there are a wealth of fantastic resources  for modern JS development, including courses from [Wes Bos](https://es6.io/),  [Tyler McGinnis](https://tylermcginnis.com/), and others.  
+We’ll be referencing a React application written with modern JavaScript language features (ES2015+), so a good understanding of modern web technologies is strongly recommended.  If you’re not quite there yet, there are a wealth of fantastic resources  for modern JS development, including courses from [Wes Bos](https://es6.io/),  [Tyler McGinnis](https://tylermcginnis.com/), and others.
 
-You will also need to have Node.js and NPM installed.  [Check out the Node.js website](https://nodejs.org/en/download/) for download links and an installation guide. 
+You will also need to have Node.js and NPM installed.  [Check out the Node.js website](https://nodejs.org/en/download/) for download links and an installation guide.
 
 We'll also expect you have an Auth0 account and have valid user permissions so that we can authenticate into our application.
 
@@ -26,10 +26,10 @@ Oh, and one more thing: we assume you have a general understanding of what Cypre
 
 ## Our Sample App
 
-Our application will be quite simple: a React application with a few routes, powered by React Router 4.  One of the routes will be protected — that is, only accessible for authenticated users — and the other, public.  
+Our application will be quite simple: a React application with a few routes, powered by React Router 4.  One of the routes will be protected — that is, only accessible for authenticated users — and the other, public.
 
-There will be one other route which serves an important purpose — 
- `/callback`.  The callback route is where the user is redirected after successfully entering their Auth0 credentials.  When this route is hit, the application checks to ensure that the state information in the url’s query string matches the state stored in the persisted cookie. 
+There will be one other route which serves an important purpose —
+ `/callback`.  The callback route is where the user is redirected after successfully entering their Auth0 credentials.  When this route is hit, the application checks to ensure that the state information in the url’s query string matches the state stored in the persisted cookie.
 
 If these protected route patterns are unfamiliar to you, I highly recommend checking out [Bruno Krebs](https://auth0.com/blog/react-tutorial-building-and-securing-your-first-app/)’ for more.
 
@@ -43,7 +43,7 @@ If these protected route patterns are unfamiliar to you, I highly recommend chec
       <ProtectedRoute
          path="/profile"
          checkingSession={ this.state.checkingSession }
-         component={ Profile } 
+         component={ Profile }
       />
 </Switch>
 ```
@@ -66,7 +66,7 @@ The naive approach would be to:
 
 There’s a problem with this, though; to paraphrase co-founder of Auth0, [Brian Mann](https://github.com/cypress-io/cypress/issues/1342#issuecomment-366747803):
 
-> The best practice is to never visit or test third-party sites  over which you have no control.  And since we don’t have control over the Auth0 website, it doesn’t make sense to try and mimic a user’s login flow through the UI.  
+> The best practice is to never visit or test third-party sites  over which you have no control.  And since we don’t have control over the Auth0 website, it doesn’t make sense to try and mimic a user’s login flow through the UI.
 
 So what do we do?
 
@@ -92,7 +92,7 @@ As stated above, our first course of action is to make an http request against A
  	const options = {
 		method: 'POST',
 	  	url: 'https://my.url.com/endpoint',
-	 
+
 	  	body: {
 	   		username: 'my_username'
 	   		password: 'my_password'
@@ -137,7 +137,7 @@ OK, so we have our custom Cypress login command, but what's with the `Cypress.en
 
 ### Cypress Environmental Variables
 
-Because we're providing sensitive information in our Cypress request to Auth0&mdash;we need to authenticate, after all!&mdash;it's imperative to store this information outside of our test suite.  
+Because we're providing sensitive information in our Cypress request to Auth0&mdash;we need to authenticate, after all!&mdash;it's imperative to store this information outside of our test suite.
 
 At the root of our project, let's create a file called `cypress.env.json`.
 
@@ -163,9 +163,9 @@ Now back in our `cypress.env.json` file, let's paste in the following:
 
 Great &mdash; now we're telling our custom login command to use the values defined in this file.  These values provided are simply placeholders, though; we need to track down the following bits of information in Auth0:
 
-* Tenant 
-* Username 
-* Password 
+* Tenant
+* Username
+* Password
 * Audience
 * Client ID
 * Client Secret
@@ -176,11 +176,11 @@ Let's head on over to Auth0 to grab these values, and tie up a few loose ends.
 
 ### Auth0 Credentials
 
-Your tenant, username, and password should be relatively straightforward; you determined the name of the tenant domain when you signed up for Auth0, and you can create a user account for the application by logging into the [Auth0 Management Console](https://manage.auth0.com), clicking **Users** > **Create Your First User** 
+Your tenant, username, and password should be relatively straightforward; you determined the name of the tenant domain when you signed up for Auth0, and you can create a user account for the application by logging into the [Auth0 Management Console](https://manage.auth0.com), clicking **Users** > **Create Your First User**
 
 Verify your account via the Auth0 email account you will receive, and you're ready to go.
 
-Three credentials down, three to go. 
+Three credentials down, three to go.
 
 ### Creating an Auth0 Application
 
@@ -211,7 +211,7 @@ In the last section, we enabled the Password grant. But what exactly is a grant,
 
 [Auth0](https://auth0.com/docs/applications/application-grant-types) defines a grant as follows:
 
-> OAuth 2.0 supports several types of grants, which are methods method by which you can gain Access Tokens. Different grant types allow different types of access, and based on the needs of your app, some grant types are more appropriate than others.
+> OAuth 2.0 supports several types of grants, which are methods by which you can gain Access Tokens. Different grant types allow different types of access, and based on the needs of your app, some grant types are more appropriate than others.
 
 That last sentence is the key here. Normally, when authenticating with Auth0, we're redirected to log in through Auth0's hosted login page.  *But*, since we're in a testing environment, and again, we don't want to test what we don't control, we have to find some other way to authenticate against Auth0 without redirecting away from our application.  That's where the Password Grant comes in.
 
@@ -221,21 +221,21 @@ The Password grant relies on authenticating a user via provided username and pas
 
 There are three important settings to be configured for our Password Grant Strategy:
 
-1. Set Application Grant type 
+1. Set Application Grant type
 2. Register an API with Auth0
 3. Configure your tenant's Default Audience and Default Directory
 
 We've already taken care of the first item when configuring our application settings. Let's address the rest.
 
 - Click on the **APIs** menu on the sidebar.  You should see that the **Auth0 Management API** was automatically created for you.  *For the purposes of this demo, we'll be using this API, but please use another in your own projects if it makes sense to do so.*
-- Copy the value from the API Audience field to your clipboard.  Enter this as the value for the corresponding `auth_audience` key in your `cypress.env.json` file. 
+- Copy the value from the API Audience field to your clipboard.  Enter this as the value for the corresponding `auth_audience` key in your `cypress.env.json` file.
 - Back in the Auth0 Management portal, browse over to your **Tenant Settings > General** tab, and enter this same value in the Default **Audience** field.
 - In the **Default Directory** field below, enter `Username-Password-Authentication`.
 - Hit **Save**.
 
-Phew! We're finished with our Grant Strategy configuration within Auth0. Now let's head back to our `cypress.env.json` file and update our `auth_url` property with a value of `https://YOUR_AUTH0_DOMAIN/oauth/token`, where `YOUR_AUTH_DOMAIN` is, well, your Auth0 tenant domain. 
+Phew! We're finished with our Grant Strategy configuration within Auth0. Now let's head back to our `cypress.env.json` file and update our `auth_url` property with a value of `https://YOUR_AUTH0_DOMAIN/oauth/token`, where `YOUR_AUTH_DOMAIN` is, well, your Auth0 tenant domain.
 
-*If you need a hint, look at the `auth_audience` property for the domain if you don't have it memorized by now.* 
+*If you need a hint, look at the `auth_audience` property for the domain if you don't have it memorized by now.*
 
 ## Writing tests using Cypress Login Command
 
@@ -273,7 +273,11 @@ Now in your terminal, run `npm run cypress:open` and click `login.js` in the Cyp
 
 ## Wrap Up
 
-- Recap of what we've learned.
+Let's recap what we've learned.  First, we learned about one of Cypress' core tenets when it comes to testing &mdash; avoid testing sites over which one does not have control. Next, we learned about Cypress Custom Commands, and how they make our lives easier by encapsulating repetitive testing logic used throughout our code into a single command.  Then, we learned about Grant Strategies, which are methods by which we can gain access tokens.  Specifically, we learned about the Resource Owner Password Grant strategy, which allows us to receive a token by providing username and password credentials, thereby circumventing the need to visit the Auth0 login page.  Finally, we've learned about how we can use our custom login command in a test, set our access token in memory, and successfully log into our application as part of our Cypress test.
+
+I hope you've enjoyed reading this article, and have gained an understanding of how you can incorporate Cypress into your Auth0 application.  If you have any questions or concerns, please feel free to leave a comment down below.
+
+Thanks for reading!
 
 ## Keep Reading
 - [Auth0 Authentication API](https://auth0.com/docs/api/authentication#resource-owner-password)
