@@ -26,6 +26,8 @@ Oh, and one more thing: we assume you have a general understanding of what Cypre
 
 ## Our Sample App
 
+*Note: If you'd like to follow along with this tutorial, clone [this repo](https://github.com/dlo83/auth0-cypress-demo) and checkout the `base` branch.  Otherwise, you can refer to the finished product on the `master` branch. Be sure to `npm install` and `npm run start` in your terminal to spin up the application.*
+
 Our application will be quite simple: a React application with a few routes, powered by React Router 4.  One of the routes will be protected — that is, only accessible for authenticated users — and the other, public.
 
 There will be one other route which serves an important purpose —
@@ -190,6 +192,14 @@ _If you already have an Auth0 application set up, feel free to skip ahead and me
 * Give your Application a name. I'm calling it _My Cypress App_.
 * Choose the **Single Page Web App** application type.
 * Click the **Settings** tab. You should now see fields with your Client ID and Client Secret.  Paste these values into the appropriate fields in your `cypress.env.json` file.
+
+### Configure React App Environmental Variables
+
+Cypress isn't the only tool in our application that can take environmental variables; we can define environmental variables for our React application, as well, albeit in a different file.
+
+* Rename the `.env.sample` file in the root of the project to simply `.env`.
+* Replace the `my-tenant.auth0.com` value for the REACT_APP_AUTH0_DOMAIN variable with your tenant domain.
+* Copy your Client ID that you discovered above right after the `=` for the REACT_APP_AUTH0_CLIENT_ID variable.  There should be no quotes around value.
 
 
 ### Application Configuration
