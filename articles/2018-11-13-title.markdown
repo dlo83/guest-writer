@@ -16,7 +16,7 @@ related:
 
 ## Prerequisites
 
-We’ll be referencing a React application written with modern JavaScript language features (ES2015+), so a good understanding of modern web technologies is strongly recommended.  If you’re not quite there yet, there are a wealth of fantastic resources  for modern JS development, including courses from [Wes Bos](https://es6.io/),  [Tyler McGinnis](https://tylermcginnis.com/), and others.
+We’ll be referencing a React application written with modern JavaScript language features (ES2015+), so a good understanding of modern web technologies is strongly recommended.  If you’re not quite there yet, there are a wealth of fantastic resources for modern JS development, including courses from [Wes Bos](https://es6.io/),  [Tyler McGinnis](https://tylermcginnis.com/), and others.
 
 You will also need to have Node.js and NPM installed.  [Check out the Node.js website](https://nodejs.org/en/download/) for download links and an installation guide.
 
@@ -31,7 +31,7 @@ Oh, and one more thing: we assume you have a general understanding of what Cypre
 Our application will be quite simple: a React application with a few routes, powered by React Router 4.  One of the routes will be protected — that is, only accessible for authenticated users — and the other, public.
 
 There will be one other route which serves an important purpose —
- `/callback`.  The callback route is where the user is redirected after successfully entering their Auth0 credentials.  When this route is hit, the application checks to ensure that the state information in the url’s query string matches the state stored in the persisted cookie.
+ `/callback`.  The callback route is where the user is redirected after successfully entering their Auth0 credentials.  When this route is hit, the application checks to ensure that the state information in the URL's query string matches the state stored in the persisted cookie.
 
 If these protected route patterns are unfamiliar to you, I highly recommend checking out [Bruno Krebs](https://auth0.com/blog/react-tutorial-building-and-securing-your-first-app/)’ for more.
 
@@ -62,13 +62,13 @@ Let’s say we want to write a test to ensure that a user can visit a page only 
 
 The naive approach would be to:
 
-* visit the web application and invoke a redirect to the Auth0 login page (via button click, route change, etc)
+* visit the web application and invoke a redirect to the Auth0 login page (via a button click, route change, etc)
 * enter in our Auth0 username and password, and submit the form
-* await for the redirect to our web application, and proceed on our merry way.
+* wait for the redirect to our web application and proceed on our merry way.
 
 There’s a problem with this, though; to paraphrase co-founder of Auth0, [Brian Mann](https://github.com/cypress-io/cypress/issues/1342#issuecomment-366747803):
 
-> The best practice is to never visit or test third-party sites  over which you have no control.  And since we don’t have control over the Auth0 website, it doesn’t make sense to try and mimic a user’s login flow through the UI.
+> The best practice is to never visit or test third-party sites over which you have no control.  And since we don’t have control over the Auth0 website, it doesn’t make sense to try and mimic a user’s login flow through the UI.
 
 So what do we do?
 
@@ -76,9 +76,9 @@ So what do we do?
 
 Thankfully, a Cypress [example recipe](https://github.com/cypress-io/cypress-example-recipes/tree/master/examples/logging-in__single-sign-on) leads us in the right direction.
 
-The general pattern for dealing with Single Sign On authentication — that is, logging into a site via a third-party authentication service — is as follows:
+The general pattern for dealing with Single Sign-On authentication — that is, logging into a site via a third-party authentication service — is as follows:
 
-*  Use Cypress’ `cy.request()`  command to make an http request to your authentication service (in our case, Auth0)
+*  Use Cypress’ `cy.request()`  command to make an HTTP request to your authentication service (in our case, Auth0)
 *  Parse the tokens in the response
 *  Set tokens on local storage
 
@@ -204,7 +204,7 @@ Cypress isn't the only tool in our application that can take environmental varia
 
 ### Application Configuration
 
-In order to get our Cypress authentication working with Auth0, there's a few more things we have to do.
+In order to get our Cypress authentication working with Auth0, there are a few more things we have to do.
 
 * Scroll down to the **Allowed Callback URLs** section and enter in the following: `http://localhost:3000/callback`.  After user authentication occurs, Auth0 will only redirect successfully if the route in question is listed here.
 * Enter `http://localhost:3000` into the **Allowed Web Origin** field.
