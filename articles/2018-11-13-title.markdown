@@ -195,11 +195,11 @@ _If you already have an Auth0 application set up, feel free to skip ahead and me
 
 ### Configure React App Environmental Variables
 
-Cypress isn't the only tool in our application that can take environmental variables; we can define environmental variables for our React application, as well, albeit in a different file.
+Cypress isn't the only tool in our application that can take environmental variables; we can define environmental variables for our React application as well, albeit in a different file.
 
 * Rename the `.env.sample` file in the root of the project to simply `.env`.
-* Replace the `my-tenant.auth0.com` value for the REACT_APP_AUTH0_DOMAIN variable with your tenant domain.
-* Copy your Client ID that you discovered above right after the `=` for the REACT_APP_AUTH0_CLIENT_ID variable.  There should be no quotes around value.
+* Replace the `my-tenant.auth0.com` value for the `REACT_APP_AUTH0_DOMAIN` variable with your tenant domain.
+* Copy your Client ID after the `=` for the `REACT_APP_AUTH0_CLIENT_ID` variable.  Unlike the `cypress.env.json` file, there should be no quotes around this value here.
 
 
 ### Application Configuration
